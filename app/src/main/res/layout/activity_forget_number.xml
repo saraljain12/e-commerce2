@@ -4,27 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="20dp"
-    tools:context=".ForgetNumber"
-    android:orientation="vertical">
+    android:layout_marginTop="20dp"
+    android:background="@drawable/bg"
+    android:orientation="vertical"
+    tools:context=".ForgetNumber">
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
         android:fontFamily="@font/russo_one"
         android:text="@string/enter_your_registered_mobile_number"
+
         android:textAlignment="center"
         android:textColor="#1F2180"
-
         android:textSize="36sp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="50dp"
+        android:layout_marginRight="20dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp">
 
