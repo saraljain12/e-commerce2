@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "673325135979",
+    "firebase_url": "https://e-commerce-abc.firebaseio.com",
+    "project_id": "e-commerce-abc",
+    "storage_bucket": "e-commerce-abc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:673325135979:android:2909c6a721fd4ff225192e",
+        "android_client_info": {
+          "package_name": "com.example.e_commerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "673325135979-8jee2q1ovtpedgs5viib406p81thm6hc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.e_commerce",
+            "certificate_hash": "466e3b725714405037eacee40c14dcf5616bea0f"
+          }
+        },
+        {
+          "client_id": "673325135979-s6k9in6svvv3814fbdh76mspibe7een0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVZBaxsKahyrrQPrk_3xmTFuQD9BAwu84"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "673325135979-s6k9in6svvv3814fbdh76mspibe7een0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
