@@ -3,5 +3,7 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/coda</item>
         <item>@font/coda_extrabold</item>
+        <item>@font/russo_one</item>
+        <item>@font/titillium_web_semibold</item>
     </array>
 </resources>
