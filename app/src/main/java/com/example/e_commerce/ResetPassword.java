@@ -17,6 +17,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +32,7 @@ public class ResetPassword extends AppCompatActivity {
     private Button setpassbtn;
     DatabaseReference mfirebasedatabase = FirebaseDatabase.getInstance().getReference().child("users");
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,20 +55,27 @@ public class ResetPassword extends AppCompatActivity {
                     {
 
                         final String phonenum = getIntent().getStringExtra("phonenum");
+                        final String id = getIntent().getStringExtra("id");
+                        final String vcode = getIntent().getStringExtra("code");
                         mfirebasedatabase.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 //final String password = snapshot.child(phonenum).child("password").getValue().toString();
                                 final String email = snapshot.child(phonenum).child("email").getValue().toString();
-                                firebaseAuth.getCurrentUser().updatePassword(pass1)
-                                        .addOnCompleteListener(ResetPassword.this, new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Intent intent1=new Intent(ResetPassword.this, MainActivity.class);
-                                                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                    startActivity(intent1);
-                                                    finish();
+                                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(id,vcode);
+                                firebaseAuth.signInWithCredential(credential).addOnCompleteListener(ResetPassword.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if(task.isSuccessful()){
+                                            firebaseAuth.getCurrentUser().updatePassword(pass1)
+                                                    .addOnCompleteListener(ResetPassword.this, new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+                                                                Intent intent1=new Intent(ResetPassword.this, MainActivity.class);
+                                                                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                                startActivity(intent1);
+                                                                finish();
 
 //                                                    firebaseAuth.signOut();
 //                                                      firebaseAuth.signInWithEmailAndPassword(email, pass1)
@@ -83,11 +93,17 @@ public class ResetPassword extends AppCompatActivity {
 //                                                                }
 //                                                            });
 
-                                                } else {
-                                                    Toast.makeText(ResetPassword.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        });
+                                                            } else {
+                                                                Toast.makeText(ResetPassword.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    });
+                                        }else{
+                                            Toast.makeText(ResetPassword.this,task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
                             }
 
                             @Override

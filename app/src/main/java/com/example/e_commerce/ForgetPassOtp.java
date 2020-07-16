@@ -96,7 +96,7 @@ public class ForgetPassOtp extends AppCompatActivity {
             if(code!=null)
             {
                 pb.setVisibility(View.VISIBLE);
-                verifycode(code);
+                //verifycode(code);
 
 
             }
@@ -109,18 +109,23 @@ public class ForgetPassOtp extends AppCompatActivity {
 
         }
     };
-    private void verifycode(String vcode)
+    private void verifycode(final String vcode)
     {
-        PhoneAuthCredential credential=PhoneAuthProvider.getCredential(id,vcode);
+        final PhoneAuthCredential credential=PhoneAuthProvider.getCredential(id,vcode);
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(ForgetPassOtp.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                if(task.isSuccessful()){
+                   firebaseAuth.signOut();
+
                    String phonenum = getIntent().getStringExtra("phonenum");
                    Intent resetpasswordintent = new Intent(ForgetPassOtp.this,ResetPassword.class);
                    resetpasswordintent.putExtra("phonenum",phonenum);
+                   resetpasswordintent.putExtra("id",id);
+                   resetpasswordintent.putExtra("code",vcode);
                    startActivity(resetpasswordintent);
                    finish();
+
                }else{
                    Toast.makeText(ForgetPassOtp.this,task.getException().toString(), Toast.LENGTH_SHORT).show();
                }
