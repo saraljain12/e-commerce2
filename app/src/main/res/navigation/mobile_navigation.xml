@@ -4,22 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/nav_home">
-
     <fragment
         android:id="@+id/nav_home"
         android:name="com.example.e_commerce.ui.home.HomeFragment"
-        android:label="@string/menu_home"
+        android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.e_commerce.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.e_commerce.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_my_order"
+        android:name="com.example.e_commerce.ui.myOrder.MyOrderFragment"
+        android:label="MyOrder"
+        tools:layout="@layout/fragment_my_order" />
+
+    <fragment
+        android:id="@+id/nav_my_reward"
+        android:name="com.example.e_commerce.ui.myReward.MyRewardFragment"
+        android:label="MyReward"
+        tools:layout="@layout/fragment_my_reward" />
+
+
 </navigation>

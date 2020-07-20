@@ -14,12 +14,12 @@ import android.view.ViewGroup;
 
 import com.example.e_commerce.R;
 
-public class MyReward extends Fragment {
+public class MyRewardFragment extends Fragment {
 
     private MyRewardViewModel mViewModel;
 
-    public static MyReward newInstance() {
-        return new MyReward();
+    public static MyRewardFragment newInstance() {
+        return new MyRewardFragment();
     }
 
     @Override
