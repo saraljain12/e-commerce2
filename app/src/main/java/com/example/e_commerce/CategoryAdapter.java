@@ -1,5 +1,7 @@
 package com.example.e_commerce;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,7 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.e_commerce.ui.home.HomeFragment;
 
 import java.util.List;
 
@@ -29,7 +34,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(@NonNull CategoryAdapter.ViewHolder holder, int position) {
            String icon = categoryModelList.get(position).getCategoryIconLink();
            String name = categoryModelList.get(position).getCategoryName();
-           holder.setCategoryName(name);
+           holder.setCategory(name);
 
     }
 
@@ -49,8 +54,19 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         private  void setCategoryIcon(){
             //TODO
         }
-        private  void setCategoryName(String name){
+        private  void setCategory(final String name){
             categoryName.setText(name);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent categoryIntent = new Intent(itemView.getContext(),CategoryActivity.class);
+                    categoryIntent.putExtra("CategoryName",name);
+                    itemView.getContext().startActivity(categoryIntent);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("CategoryName", name);
+//                    Navigation.findNavController(v).navigate(R.id.category_detail,bundle);
+                }
+            });
         }
     }
 }

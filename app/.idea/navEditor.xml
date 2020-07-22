@@ -8,13 +8,13 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
-                  <entry key="loginActivity">
+                  <entry key="category_detail">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="238" />
-                            <option name="y" value="314" />
+                            <option name="x" value="241" />
+                            <option name="y" value="320" />
                           </Point>
                         </option>
                       </LayoutPositions>
