@@ -2,11 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#ffffff"
-    android:elevation="3dp"
-    android:id="@+id/offers_applied"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    android:background="#ffffff"
+    android:elevation="3dp">
 
     <ImageView
         android:id="@+id/product_image"
@@ -34,10 +35,10 @@
         android:id="@+id/free_cuopen_icon"
         android:layout_width="15dp"
         android:layout_height="15dp"
-        android:layout_marginTop="2dp"
         android:tint="#8000ff"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_free_coupen"
         app:layout_constraintStart_toStartOf="@+id/product_title"
-        app:layout_constraintTop_toBottomOf="@+id/product_title"
+        app:layout_constraintTop_toTopOf="@+id/tv_free_coupen"
         app:srcCompat="@drawable/ic_menu_camera" />
 
     <TextView
@@ -84,7 +85,7 @@
         app:layout_constraintTop_toTopOf="@+id/cutted_price" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/offers_applied"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -103,7 +104,7 @@
         android:textColor="#8000ff"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        app:layout_constraintTop_toBottomOf="@+id/offers_applied" />
 
     <TextView
         android:id="@+id/product_quantity"
@@ -166,13 +167,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/coupen_redemption_layout">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Remove item"
-            android:gravity="center"
+            android:drawableStart="@drawable/ic_menu_slideshow"
             android:drawablePadding="4dp"
-            android:drawableStart="@drawable/ic_menu_slideshow"/>
+            android:gravity="center"
+            android:text="Remove item" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.example.e_commerce;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
@@ -130,9 +131,14 @@ public class ProductDetailsActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.search_and_cart_icon, menu);
         return true;
     }
-    public boolean onOptionsItemSelected(MenuItem item) {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.onNavDestinationSelected(item, navController)
-                || super.onOptionsItemSelected(item);
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

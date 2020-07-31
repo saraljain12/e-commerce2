@@ -1,5 +1,7 @@
 package com.example.e_commerce.ui.home;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -44,7 +47,7 @@ public class HomeFragment extends Fragment {
     private HomeViewModel mViewModel;
     private RecyclerView categoryRecyclerView;
     private CategoryAdapter categoryAdapter;
-    private List<SliderModel>  sliderModelList ;
+    private List<SliderModel> sliderModelList;
 
 
     public static HomeFragment newInstance() {
@@ -53,71 +56,91 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_home, container, false);
+        getActivity().findViewById(R.id.action_bar_logo).setVisibility(View.VISIBLE);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        final View view = inflater.inflate(R.layout.fragment_home, container, false);
         categoryRecyclerView = view.findViewById(R.id.category_recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         categoryRecyclerView.setLayoutManager(layoutManager);
         List<CategoryModel> categoryModelList = new ArrayList<CategoryModel>();
-        categoryModelList.add(new CategoryModel("link","Home"));
-        categoryModelList.add(new CategoryModel("link","Aryan"));
-        categoryModelList.add(new CategoryModel("link","Home"));
-        categoryModelList.add(new CategoryModel("link","Home"));
-        categoryModelList.add(new CategoryModel("link","Home"));
-        categoryModelList.add(new CategoryModel("link","Home"));
-        categoryModelList.add(new CategoryModel("link","Home"));
+        categoryModelList.add(new CategoryModel("link", "Home"));
+        categoryModelList.add(new CategoryModel("link", "Aryan"));
+        categoryModelList.add(new CategoryModel("link", "Home"));
+        categoryModelList.add(new CategoryModel("link", "Home"));
+        categoryModelList.add(new CategoryModel("link", "Home"));
+        categoryModelList.add(new CategoryModel("link", "Home"));
+        categoryModelList.add(new CategoryModel("link", "Home"));
         categoryAdapter = new CategoryAdapter(categoryModelList);
         categoryRecyclerView.setAdapter(categoryAdapter);
         categoryAdapter.notifyDataSetChanged();
 
         sliderModelList = new ArrayList<>();
-        sliderModelList.add(new SliderModel(R.drawable.ic_menu_gallery,"#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.googleg_standard_color_18,"#ffffff"));
+        sliderModelList.add(new SliderModel(R.drawable.ic_menu_gallery, "#ffffff"));
+        sliderModelList.add(new SliderModel(R.drawable.googleg_standard_color_18, "#ffffff"));
 
-        sliderModelList.add(new SliderModel(R.mipmap.ic_launcher,"#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_menu_camera,"#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.common_full_open_on_phone,"#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_menu_gallery,"#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.googleg_standard_color_18,"#ffffff"));
+        sliderModelList.add(new SliderModel(R.mipmap.ic_launcher, "#ffffff"));
+        sliderModelList.add(new SliderModel(R.drawable.ic_menu_camera, "#ffffff"));
+        sliderModelList.add(new SliderModel(R.drawable.common_full_open_on_phone, "#ffffff"));
+        sliderModelList.add(new SliderModel(R.drawable.ic_menu_gallery, "#ffffff"));
+        sliderModelList.add(new SliderModel(R.drawable.googleg_standard_color_18, "#ffffff"));
 
-        sliderModelList.add(new SliderModel(R.mipmap.ic_launcher,"#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_menu_camera,"#ffffff"));
-
-
-
-
-
-
+        sliderModelList.add(new SliderModel(R.mipmap.ic_launcher, "#ffffff"));
+        sliderModelList.add(new SliderModel(R.drawable.ic_menu_camera, "#ffffff"));
 
 
         List<HorizontalScrollModel> horizontalScrollModelList = new ArrayList<>();
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.back_button,"Redmi 5A","Hello","5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_camera,"Redmi 5A","Hello","5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_slideshow,"Redmi 5A","Hello","5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.googleg_standard_color_18,"Redmi 5A","Hello","5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_gallery,"Redmi 5A","Hello","5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.submit,"Redmi 5A","Hello","5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.mipmap.ic_launcher,"Redmi 5A","Hello","5999"));
+        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.back_button, "Redmi 5A", "Hello", "5999"));
+        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_camera, "Redmi 5A", "Hello", "5999"));
+        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_slideshow, "Redmi 5A", "Hello", "5999"));
+        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.googleg_standard_color_18, "Redmi 5A", "Hello", "5999"));
+        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_gallery, "Redmi 5A", "Hello", "5999"));
+        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.submit, "Redmi 5A", "Hello", "5999"));
+        horizontalScrollModelList.add(new HorizontalScrollModel(R.mipmap.ic_launcher, "Redmi 5A", "Hello", "5999"));
+        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.back_button, "Redmi 5A", "Hello", "5999"));
+        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_camera, "Redmi 5A", "Hello", "5999"));
+        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_slideshow, "Redmi 5A", "Hello", "5999"));
+        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.googleg_standard_color_18, "Redmi 5A", "Hello", "5999"));
+        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_gallery, "Redmi 5A", "Hello", "5999"));
+        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.submit, "Redmi 5A", "Hello", "5999"));
+        horizontalScrollModelList.add(new HorizontalScrollModel(R.mipmap.ic_launcher, "Redmi 5A", "Hello", "5999"));
 
 
         ///////////////////////
-        RecyclerView testing =  view.findViewById(R.id.home_page_recyclerview);
+        RecyclerView testing = view.findViewById(R.id.home_page_recyclerview);
         LinearLayoutManager testingLayoutManager = new LinearLayoutManager(getContext());
         testingLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         testing.setLayoutManager(testingLayoutManager);
         List<HomePageModel> homePageModelList = new ArrayList<>();
-        homePageModelList.add(new HomePageModel(0,sliderModelList));
-        homePageModelList.add(new HomePageModel(1,R.mipmap.ic_launcher,"#ffffff"));
-        homePageModelList.add(new HomePageModel(2,horizontalScrollModelList,"title"));
-        homePageModelList.add(new HomePageModel(3,horizontalScrollModelList,"title"));
+        homePageModelList.add(new HomePageModel(0, sliderModelList));
+        homePageModelList.add(new HomePageModel(1, R.mipmap.ic_launcher, "#ffffff"));
+        homePageModelList.add(new HomePageModel(2, horizontalScrollModelList, "title"));
+        homePageModelList.add(new HomePageModel(3, horizontalScrollModelList, "title"));
         HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
         testing.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                getActivity().finish();
+
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+
         ///////////////////////
         return view;
     }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -126,4 +149,7 @@ public class HomeFragment extends Fragment {
         // TODO: Use the ViewModel
 
     }
+
+
+
 }
