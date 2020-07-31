@@ -26,7 +26,7 @@
         android:id="@+id/nav_my_reward"
         android:name="com.example.e_commerce.ui.myReward.MyRewardFragment"
         android:label="MyReward"
-        tools:layout="@layout/fragment_my_reward" />
+        tools:layout="@layout/fragment_my_rewards" />
     <activity
         android:id="@+id/category_detail"
         android:name="com.example.e_commerce.CategoryActivity"
