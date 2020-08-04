@@ -1,11 +1,17 @@
 package com.example.e_commerce;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -15,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -32,6 +39,12 @@ public class  MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        //System.out.println(currentUser.getUid().toString());
+        if(currentUser == null){
+            sendtoStart();
+        }
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -44,11 +57,40 @@ public class  MainActivity extends AppCompatActivity {
         sign_out.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                mAuth = FirebaseAuth.getInstance();
-                mAuth.signOut();
-                Intent login_intent = new Intent(MainActivity.this,LoginActivity.class);
-                startActivity(login_intent);
-                finishAffinity();
+//                mAuth = FirebaseAuth.getInstance();
+//                mAuth.signOut();
+//                Intent login_intent = new Intent(MainActivity.this,LoginActivity.class);
+//                startActivity(login_intent);
+//                finishAffinity();
+               final Dialog SignInDialog = new Dialog(MainActivity.this);
+                SignInDialog.setContentView(R.layout.sign_in_dialog);
+                SignInDialog.setCancelable(true);
+                SignInDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                Button sign_in = SignInDialog.findViewById(R.id.sign_in_btn);
+                Button sign_up = SignInDialog.findViewById(R.id.sign_up_btn);
+                sign_in.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SignInDialog.dismiss();
+                        mAuth = FirebaseAuth.getInstance();
+                        mAuth.signOut();
+                       Intent login_intent = new Intent(MainActivity.this,LoginActivity.class);
+                       startActivity(login_intent);
+                      finishAffinity();
+                    }
+                });
+                sign_up.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SignInDialog.dismiss();
+                        mAuth = FirebaseAuth.getInstance();
+                        mAuth.signOut();
+                        Intent login_intent = new Intent(MainActivity.this,RegisterActivity.class);
+                        startActivity(login_intent);
+                        finishAffinity();
+                    }
+                });
+                SignInDialog.show();
                 return false;
             }
         });

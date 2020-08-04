@@ -85,7 +85,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         productsdetailstablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                productImagesviewpager.setCurrentItem(tab.getPosition());
+                productsdetailsviewpager.setCurrentItem(tab.getPosition());
             }
 
             @Override

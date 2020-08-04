@@ -19,7 +19,8 @@ import java.util.List;
 
 public class CategoryActivity extends AppCompatActivity {
     private RecyclerView categoryRecyclerView;
-
+    private List<HomePageModel> homePageModelFakeList = new ArrayList<>();
+    private HomePageAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,41 +31,46 @@ public class CategoryActivity extends AppCompatActivity {
         String title = getIntent().getStringExtra("CategoryName");
         getSupportActionBar().setTitle(title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        /////////////// home fake list
+
+        List<SliderModel> sliderModelFakeList = new ArrayList<>();
+        sliderModelFakeList.add(new SliderModel(null,"#ffffff"));
+        sliderModelFakeList.add(new SliderModel(null,"#ffffff"));
+        sliderModelFakeList.add(new SliderModel(null,"#ffffff"));
+        sliderModelFakeList.add(new SliderModel(null,"#ffffff"));
+        sliderModelFakeList.add(new SliderModel(null,"#ffffff"));
+
+        List<HorizontalScrollModel> horizontalScrollModelFakeList = new ArrayList<>();
+        horizontalScrollModelFakeList.add(new HorizontalScrollModel("","","","",""));
+        horizontalScrollModelFakeList.add(new HorizontalScrollModel("","","","",""));
+        horizontalScrollModelFakeList.add(new HorizontalScrollModel("","","","",""));
+        horizontalScrollModelFakeList.add(new HorizontalScrollModel("","","","",""));
+        horizontalScrollModelFakeList.add(new HorizontalScrollModel("","","","",""));
+        horizontalScrollModelFakeList.add(new HorizontalScrollModel("","","","",""));
+        horizontalScrollModelFakeList.add(new HorizontalScrollModel("","","","",""));
+
+        homePageModelFakeList.add(new HomePageModel(0,sliderModelFakeList));
+        homePageModelFakeList.add(new HomePageModel(3,horizontalScrollModelFakeList,"","#ffffff"));
+        homePageModelFakeList.add(new HomePageModel(2,horizontalScrollModelFakeList,"","#ffffff",new ArrayList<MyWishlistModel>()));
+
+        /////////////// home fake list
+
+
         categoryRecyclerView = findViewById(R.id.category_recyclerview);
-        List<SliderModel> sliderModelList = new ArrayList<>();
-        sliderModelList.add(new SliderModel(R.drawable.ic_menu_gallery, "#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.googleg_standard_color_18, "#ffffff"));
-
-        sliderModelList.add(new SliderModel(R.mipmap.ic_launcher, "#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_menu_camera, "#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.common_full_open_on_phone, "#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_menu_gallery, "#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.googleg_standard_color_18, "#ffffff"));
-
-        sliderModelList.add(new SliderModel(R.mipmap.ic_launcher, "#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_menu_camera, "#ffffff"));
-
-
-        List<HorizontalScrollModel> horizontalScrollModelList = new ArrayList<>();
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.back_button, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_camera, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_slideshow, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.googleg_standard_color_18, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_gallery, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.submit, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.mipmap.ic_launcher, "Redmi 5A", "Hello", "5999"));
-
-
-        ///////////////////////
         LinearLayoutManager testingLayoutManager = new LinearLayoutManager(this);
         testingLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         categoryRecyclerView.setLayoutManager(testingLayoutManager);
-        List<HomePageModel> homePageModelList = new ArrayList<>();
-        homePageModelList.add(new HomePageModel(0, sliderModelList));
-        homePageModelList.add(new HomePageModel(1, R.mipmap.ic_launcher, "#ffffff"));
-        homePageModelList.add(new HomePageModel(2, horizontalScrollModelList, "title"));
-        homePageModelList.add(new HomePageModel(3, horizontalScrollModelList, "title"));
-        HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
+       adapter = new HomePageAdapter(homePageModelFakeList);
+        categoryRecyclerView.setAdapter(adapter);
+
+        if(!DBqueries.parentHashmap.containsKey(title.toUpperCase())){
+            DBqueries.parentHashmap.put(title.toUpperCase(),new ArrayList<HomePageModel>());
+            DBqueries.loadFragmentData(categoryRecyclerView,this,title.toUpperCase());
+        }else{
+             adapter = new HomePageAdapter(DBqueries.parentHashmap.get(title.toUpperCase()));
+
+        }
         categoryRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -81,7 +87,7 @@ public class CategoryActivity extends AppCompatActivity {
 //                || super.onOptionsItemSelected(item);
 //    }
 
-    //    @Override
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {

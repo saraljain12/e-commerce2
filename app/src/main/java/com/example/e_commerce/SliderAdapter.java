@@ -12,10 +12,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Placeholder;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 import java.util.Timer;
@@ -37,7 +41,7 @@ public  class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull SliderAdapter.ViewHolder holder, int position) {
-        int banner = sliderModelList.get(position).getBanner();
+        String banner = sliderModelList.get(position).getBanner();
         holder.sliderLayout.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(sliderModelList.get(position).getBackgroundColor())));
         holder.setImageView(banner);
     }
@@ -54,8 +58,8 @@ public  class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.ViewHolde
             imageView = itemView.findViewById(R.id.banner_slide);
             sliderLayout = itemView.findViewById(R.id.slider_layout);
         }
-        private  void setImageView(int banner){
-            imageView.setImageResource(banner);
+        private  void setImageView(String banner){
+            Glide.with(itemView.getContext()).load(banner).apply(new RequestOptions().placeholder(R.mipmap.house)).into(imageView);
         }
     }
 

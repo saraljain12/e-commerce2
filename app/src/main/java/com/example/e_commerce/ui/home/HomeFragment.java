@@ -5,7 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Handler;
@@ -25,20 +30,33 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.e_commerce.CategoryAdapter;
 import com.example.e_commerce.CategoryModel;
+import com.example.e_commerce.DBqueries;
 import com.example.e_commerce.GridProductLayoutAdapter;
 import com.example.e_commerce.HomePageAdapter;
 import com.example.e_commerce.HomePageModel;
 import com.example.e_commerce.HorizontalScrollAdapter;
 import com.example.e_commerce.HorizontalScrollModel;
+import com.example.e_commerce.LoginActivity;
+import com.example.e_commerce.MainActivity;
+import com.example.e_commerce.MyWishlistModel;
 import com.example.e_commerce.R;
 import com.example.e_commerce.SliderAdapter;
 import com.example.e_commerce.SliderModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -47,9 +65,15 @@ public class HomeFragment extends Fragment {
     private HomeViewModel mViewModel;
     private RecyclerView categoryRecyclerView;
     private CategoryAdapter categoryAdapter;
-    private List<SliderModel> sliderModelList;
-
-
+    private ImageView noInternet;
+    private   boolean isConnected ;
+    private  List<CategoryModel> categoryModelFakeList = new ArrayList<>();
+    private RecyclerView homePageRecyclerView;
+    private  HomePageAdapter adapter;
+    private List<HomePageModel> homePageModelFakeList = new ArrayList<>();
+    private ConnectivityManager connectivityManager;
+    private NetworkInfo activeNetwork;
+    public static SwipeRefreshLayout swipeRefreshLayout;
     public static HomeFragment newInstance() {
 
         return new HomeFragment();
@@ -59,6 +83,7 @@ public class HomeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
     }
 
     @Override
@@ -67,77 +92,126 @@ public class HomeFragment extends Fragment {
         getActivity().findViewById(R.id.action_bar_logo).setVisibility(View.VISIBLE);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
+        swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
+        homePageRecyclerView = view.findViewById(R.id.home_page_recyclerview);
         categoryRecyclerView = view.findViewById(R.id.category_recyclerview);
+
+         connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+         activeNetwork = connectivityManager.getActiveNetworkInfo();
+        noInternet = view.findViewById(R.id.no_internet_connection);
+
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         categoryRecyclerView.setLayoutManager(layoutManager);
-        List<CategoryModel> categoryModelList = new ArrayList<CategoryModel>();
-        categoryModelList.add(new CategoryModel("link", "Home"));
-        categoryModelList.add(new CategoryModel("link", "Aryan"));
-        categoryModelList.add(new CategoryModel("link", "Home"));
-        categoryModelList.add(new CategoryModel("link", "Home"));
-        categoryModelList.add(new CategoryModel("link", "Home"));
-        categoryModelList.add(new CategoryModel("link", "Home"));
-        categoryModelList.add(new CategoryModel("link", "Home"));
-        categoryAdapter = new CategoryAdapter(categoryModelList);
-        categoryRecyclerView.setAdapter(categoryAdapter);
-        categoryAdapter.notifyDataSetChanged();
 
-        sliderModelList = new ArrayList<>();
-        sliderModelList.add(new SliderModel(R.drawable.ic_menu_gallery, "#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.googleg_standard_color_18, "#ffffff"));
+         /////////////// categories fake list
+        categoryModelFakeList.add(new CategoryModel("null",""));
+        categoryModelFakeList.add(new CategoryModel("null",""));
+        categoryModelFakeList.add(new CategoryModel("null",""));
+        categoryModelFakeList.add(new CategoryModel("null",""));
+        categoryModelFakeList.add(new CategoryModel("null",""));
+        categoryModelFakeList.add(new CategoryModel("null",""));
+        categoryModelFakeList.add(new CategoryModel("null",""));
+        /////////////// categories fake list
 
-        sliderModelList.add(new SliderModel(R.mipmap.ic_launcher, "#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_menu_camera, "#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.common_full_open_on_phone, "#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_menu_gallery, "#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.googleg_standard_color_18, "#ffffff"));
+        /////////////// home fake list
+        List<SliderModel> sliderModelFakeList = new ArrayList<>();
+        sliderModelFakeList.add(new SliderModel(null,"#ffffff"));
+        sliderModelFakeList.add(new SliderModel(null,"#ffffff"));
+        sliderModelFakeList.add(new SliderModel(null,"#ffffff"));
+        sliderModelFakeList.add(new SliderModel(null,"#ffffff"));
+        sliderModelFakeList.add(new SliderModel(null,"#ffffff"));
 
-        sliderModelList.add(new SliderModel(R.mipmap.ic_launcher, "#ffffff"));
-        sliderModelList.add(new SliderModel(R.drawable.ic_menu_camera, "#ffffff"));
+        List<HorizontalScrollModel> horizontalScrollModelFakeList = new ArrayList<>();
+        horizontalScrollModelFakeList.add(new HorizontalScrollModel("","","","",""));
+        horizontalScrollModelFakeList.add(new HorizontalScrollModel("","","","",""));
+        horizontalScrollModelFakeList.add(new HorizontalScrollModel("","","","",""));
+        horizontalScrollModelFakeList.add(new HorizontalScrollModel("","","","",""));
+        horizontalScrollModelFakeList.add(new HorizontalScrollModel("","","","",""));
+        horizontalScrollModelFakeList.add(new HorizontalScrollModel("","","","",""));
+        horizontalScrollModelFakeList.add(new HorizontalScrollModel("","","","",""));
 
-
-        List<HorizontalScrollModel> horizontalScrollModelList = new ArrayList<>();
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.back_button, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_camera, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_slideshow, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.googleg_standard_color_18, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_gallery, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.submit, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.mipmap.ic_launcher, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.back_button, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_camera, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_slideshow, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.googleg_standard_color_18, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_gallery, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.submit, "Redmi 5A", "Hello", "5999"));
-        horizontalScrollModelList.add(new HorizontalScrollModel(R.mipmap.ic_launcher, "Redmi 5A", "Hello", "5999"));
+        homePageModelFakeList.add(new HomePageModel(0,sliderModelFakeList));
+        homePageModelFakeList.add(new HomePageModel(3,horizontalScrollModelFakeList,"","#ffffff"));
+        homePageModelFakeList.add(new HomePageModel(2,horizontalScrollModelFakeList,"","#ffffff",new ArrayList<MyWishlistModel>()));
 
 
-        ///////////////////////
-        RecyclerView testing = view.findViewById(R.id.home_page_recyclerview);
         LinearLayoutManager testingLayoutManager = new LinearLayoutManager(getContext());
         testingLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        testing.setLayoutManager(testingLayoutManager);
-        List<HomePageModel> homePageModelList = new ArrayList<>();
-        homePageModelList.add(new HomePageModel(0, sliderModelList));
-        homePageModelList.add(new HomePageModel(1, R.mipmap.ic_launcher, "#ffffff"));
-        homePageModelList.add(new HomePageModel(2, horizontalScrollModelList, "title"));
-        homePageModelList.add(new HomePageModel(3, horizontalScrollModelList, "title"));
-        HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
-        testing.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
+        homePageRecyclerView.setLayoutManager(testingLayoutManager);
 
-                getActivity().finish();
 
+        /////////////// home fake list
+
+        categoryAdapter = new CategoryAdapter(categoryModelFakeList);
+
+
+        adapter = new HomePageAdapter(homePageModelFakeList);
+        homePageRecyclerView.setAdapter(adapter);
+
+
+        isConnected = activeNetwork != null &&
+                activeNetwork.isConnected();
+        if(isConnected){
+            noInternet.setVisibility(View.GONE);
+            if(DBqueries.categoryModelList.size()==0){
+                DBqueries.loadCategories(categoryRecyclerView,getContext());
+            }else{
+                categoryAdapter = new CategoryAdapter(DBqueries.categoryModelList);
+                categoryAdapter.notifyDataSetChanged();
             }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+            categoryRecyclerView.setAdapter(categoryAdapter);
 
-        ///////////////////////
+
+            if(DBqueries.parentHashmap.size()==0){
+                DBqueries.parentHashmap.put("HOME",new ArrayList<HomePageModel>());
+                DBqueries.loadFragmentData(homePageRecyclerView,getContext(),"HOME");
+            }else{
+                adapter = new HomePageAdapter(DBqueries.parentHashmap.get("HOME"));
+                adapter.notifyDataSetChanged();
+            }
+            homePageRecyclerView.setAdapter(adapter);
+
+            OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+
+                    getActivity().finish();
+
+                }
+            };
+            requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+        }else{
+            noInternet.setVisibility(View.VISIBLE);
+        }
+         ////////////////////// refresh layout
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+
+                DBqueries.categoryModelList.clear();
+                DBqueries.parentHashmap.clear();
+                connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                activeNetwork = connectivityManager.getActiveNetworkInfo();
+                isConnected = activeNetwork != null &&
+                        activeNetwork.isConnected();
+
+                if(isConnected){
+                    categoryRecyclerView.setAdapter(categoryAdapter);
+                    homePageRecyclerView.setAdapter(adapter);
+                    noInternet.setVisibility(View.GONE);
+                    DBqueries.loadCategories(categoryRecyclerView,getContext());
+                    DBqueries.parentHashmap.put("HOME",new ArrayList<HomePageModel>());
+                    DBqueries.loadFragmentData(homePageRecyclerView,getContext(),"HOME");
+                }else{
+                    noInternet.setVisibility(View.VISIBLE);
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+        /////////////////////// refresh layout
         return view;
     }
 

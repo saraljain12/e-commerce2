@@ -10,6 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.util.List;
 
 public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScrollAdapter.ViewHolder> {
@@ -28,7 +31,7 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
 
     @Override
     public void onBindViewHolder(@NonNull HorizontalScrollAdapter.ViewHolder holder, int position) {
-      int HorizontalScrollImage = horizontalScrollModelList.get(position).getHorizontalScrollImage();
+      String HorizontalScrollImage = horizontalScrollModelList.get(position).getHorizontalScrollImage();
       String HorizontalScrollTitle = horizontalScrollModelList.get(position).getHorizontalScrollTitle();
         String HorizontalScrollDescription = horizontalScrollModelList.get(position).getHorizontalScrollDescription();
         String HorizontalScrollPrice = horizontalScrollModelList.get(position).getHorizontalScrollPrice();
@@ -66,8 +69,8 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
 
         }
 
-        public void setHorizontalScrollImage(int horizontalScrollImage) {
-            HorizontalScrollImage.setImageResource(horizontalScrollImage);
+        public void setHorizontalScrollImage(String horizontalScrollImage) {
+            Glide.with(itemView.getContext()).load(horizontalScrollImage).apply(new RequestOptions().placeholder(R.mipmap.house)).into(HorizontalScrollImage);
         }
 
         public void setHorizontalScrollDescription(String horizontalScrollDescription) {

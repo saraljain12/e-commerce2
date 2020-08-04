@@ -18,6 +18,8 @@ public class ViewAllActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private GridView gridView;
     int layout;
+    public static  List<HorizontalScrollModel> horizontalScrollModelList ;
+    public static List<MyWishlistModel> myWishlistModelList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +27,8 @@ public class ViewAllActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle("Deal of the Day");
+        String title = getIntent().getStringExtra("title");
+        getSupportActionBar().setTitle(title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         layout = getIntent().getIntExtra("layout", -1);
         if(layout == 0) {
@@ -35,36 +38,33 @@ public class ViewAllActivity extends AppCompatActivity {
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             layoutManager.setOrientation(RecyclerView.VERTICAL);
             recyclerView.setLayoutManager(layoutManager);
-            List<MyWishlistModel> myWishlistModelList = new ArrayList<>();
-            myWishlistModelList.add(new MyWishlistModel(R.drawable.ic_menu_camera, "PIXEL XL", 2, "(35) Rating", 3.5, "Rs 499999/-", "Rs 59999/-", "Cash on Delivery!!!"));
-            myWishlistModelList.add(new MyWishlistModel(R.drawable.ic_menu_camera, "PIXEL XL", 0, "(35) Rating", 3.5, "Rs 499999/-", "Rs 59999/-", "Cash on Delivery!!!"));
-            myWishlistModelList.add(new MyWishlistModel(R.drawable.ic_menu_camera, "PIXEL XL", 2, "(35) Rating", 3.5, "Rs 499999/-", "Rs 59999/-", "Cash on Delivery!!!"));
-            myWishlistModelList.add(new MyWishlistModel(R.drawable.ic_menu_camera, "PIXEL XL", 2, "(35) Rating", 3.5, "Rs 499999/-", "Rs 59999/-", "Cash on Delivery!!!"));
-            myWishlistModelList.add(new MyWishlistModel(R.drawable.ic_menu_camera, "PIXEL XL", 2, "(35) Rating", 3.5, "Rs 499999/-", "Rs 59999/-", "Cash on Delivery!!!"));
+
             MyWishlistAdapter myWishlistAdapter = new MyWishlistAdapter(myWishlistModelList, false);
             recyclerView.setAdapter(myWishlistAdapter);
             myWishlistAdapter.notifyDataSetChanged();
         }else {
             gridView = findViewById(R.id.grid_view);
-
             gridView.setVisibility(View.VISIBLE);
-            List<HorizontalScrollModel> horizontalScrollModelList = new ArrayList<>();
-            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.back_button, "Redmi 5A", "Hello", "5999"));
-            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_camera, "Redmi 5A", "Hello", "5999"));
-            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_slideshow, "Redmi 5A", "Hello", "5999"));
-            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.googleg_standard_color_18, "Redmi 5A", "Hello", "5999"));
-            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_gallery, "Redmi 5A", "Hello", "5999"));
-            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.submit, "Redmi 5A", "Hello", "5999"));
-            horizontalScrollModelList.add(new HorizontalScrollModel(R.mipmap.ic_launcher, "Redmi 5A", "Hello", "5999"));
-            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.back_button, "Redmi 5A", "Hello", "5999"));
-            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_camera, "Redmi 5A", "Hello", "5999"));
-            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_slideshow, "Redmi 5A", "Hello", "5999"));
-            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.googleg_standard_color_18, "Redmi 5A", "Hello", "5999"));
-            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_gallery, "Redmi 5A", "Hello", "5999"));
-            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.submit, "Redmi 5A", "Hello", "5999"));
-            horizontalScrollModelList.add(new HorizontalScrollModel(R.mipmap.ic_launcher, "Redmi 5A", "Hello", "5999"));
+
             GridProductLayoutAdapter gridProductLayoutAdapter = new GridProductLayoutAdapter(horizontalScrollModelList);
             gridView.setAdapter(gridProductLayoutAdapter);
+//            List<HorizontalScrollModel> horizontalScrollModelList = new ArrayList<>();
+//            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.back_button, "Redmi 5A", "Hello", "5999"));
+//            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_camera, "Redmi 5A", "Hello", "5999"));
+//            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_slideshow, "Redmi 5A", "Hello", "5999"));
+//            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.googleg_standard_color_18, "Redmi 5A", "Hello", "5999"));
+//            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_gallery, "Redmi 5A", "Hello", "5999"));
+//            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.submit, "Redmi 5A", "Hello", "5999"));
+//            horizontalScrollModelList.add(new HorizontalScrollModel(R.mipmap.ic_launcher, "Redmi 5A", "Hello", "5999"));
+//            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.back_button, "Redmi 5A", "Hello", "5999"));
+//            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_camera, "Redmi 5A", "Hello", "5999"));
+//            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_slideshow, "Redmi 5A", "Hello", "5999"));
+//            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.googleg_standard_color_18, "Redmi 5A", "Hello", "5999"));
+//            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.ic_menu_gallery, "Redmi 5A", "Hello", "5999"));
+//            horizontalScrollModelList.add(new HorizontalScrollModel(R.drawable.submit, "Redmi 5A", "Hello", "5999"));
+//            horizontalScrollModelList.add(new HorizontalScrollModel(R.mipmap.ic_launcher, "Redmi 5A", "Hello", "5999"));
+//            GridProductLayoutAdapter gridProductLayoutAdapter = new GridProductLayoutAdapter(horizontalScrollModelList);
+//            gridView.setAdapter(gridProductLayoutAdapter);
         }
     }
 

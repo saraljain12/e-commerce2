@@ -1,23 +1,33 @@
 package com.example.e_commerce;
 
 public class HorizontalScrollModel {
-    private  int HorizontalScrollImage;
+    private String productID;
+    private  String HorizontalScrollImage;
     private String HorizontalScrollTitle;
     private String HorizontalScrollDescription;
     private String HorizontalScrollPrice;
 
-    public HorizontalScrollModel(int horizontalScrollImage, String horizontalScrollTitle, String horizontalScrollDescription, String horizontalScrollPrice) {
+    public String getProductID() {
+        return productID;
+    }
+
+    public void setProductID(String productID) {
+        this.productID = productID;
+    }
+
+    public HorizontalScrollModel(String productID, String horizontalScrollImage, String horizontalScrollTitle, String horizontalScrollDescription, String horizontalScrollPrice) {
         HorizontalScrollImage = horizontalScrollImage;
         HorizontalScrollTitle = horizontalScrollTitle;
         HorizontalScrollDescription = horizontalScrollDescription;
         HorizontalScrollPrice = horizontalScrollPrice;
+        this.productID = productID;
     }
 
-    public int getHorizontalScrollImage() {
+    public String getHorizontalScrollImage() {
         return HorizontalScrollImage;
     }
 
-    public void setHorizontalScrollImage(int horizontalScrollImage) {
+    public void setHorizontalScrollImage(String horizontalScrollImage) {
         HorizontalScrollImage = horizontalScrollImage;
     }
 

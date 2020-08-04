@@ -39,11 +39,6 @@ public class MyWishlistFragment extends Fragment {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         List<MyWishlistModel> myWishlistModelList = new ArrayList<>();
-        myWishlistModelList.add(new MyWishlistModel(R.drawable.ic_menu_camera,"PIXEL XL",2,"(35) Rating",3.5,"Rs 499999/-","Rs 59999/-","Cash on Delivery!!!"));
-        myWishlistModelList.add(new MyWishlistModel(R.drawable.ic_menu_camera,"PIXEL XL",0,"(35) Rating",3.5,"Rs 499999/-","Rs 59999/-","Cash on Delivery!!!"));
-        myWishlistModelList.add(new MyWishlistModel(R.drawable.ic_menu_camera,"PIXEL XL",2,"(35) Rating",3.5,"Rs 499999/-","Rs 59999/-","Cash on Delivery!!!"));
-        myWishlistModelList.add(new MyWishlistModel(R.drawable.ic_menu_camera,"PIXEL XL",2,"(35) Rating",3.5,"Rs 499999/-","Rs 59999/-","Cash on Delivery!!!"));
-        myWishlistModelList.add(new MyWishlistModel(R.drawable.ic_menu_camera,"PIXEL XL",2,"(35) Rating",3.5,"Rs 499999/-","Rs 59999/-","Cash on Delivery!!!"));
         MyWishlistAdapter myWishlistAdapter = new MyWishlistAdapter(myWishlistModelList,true);
         recyclerView.setAdapter(myWishlistAdapter);
         myWishlistAdapter.notifyDataSetChanged();

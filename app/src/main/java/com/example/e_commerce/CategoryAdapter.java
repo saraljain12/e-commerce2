@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.e_commerce.ui.home.HomeFragment;
 
 import java.util.List;
@@ -35,6 +37,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
            String icon = categoryModelList.get(position).getCategoryIconLink();
            String name = categoryModelList.get(position).getCategoryName();
            holder.setCategory(name);
+           holder.setCategoryIcon(icon);
 
     }
 
@@ -51,8 +54,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             categoryIcon = itemView.findViewById(R.id.category_icon);
             categoryName = itemView.findViewById(R.id.category_name);
         }
-        private  void setCategoryIcon(){
-            //TODO
+        private  void setCategoryIcon(String iconUrl){
+            if(!iconUrl.equals("null")){
+                Glide.with(itemView.getContext()).load(iconUrl).apply(new RequestOptions().placeholder(R.mipmap.house)).into(categoryIcon);
+            }
+
         }
         private  void setCategory(final String name){
             categoryName.setText(name);

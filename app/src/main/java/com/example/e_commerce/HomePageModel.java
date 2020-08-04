@@ -13,6 +13,7 @@ public class HomePageModel {
     public static final int HORIZONTAL_SCROLL_PRODUCT=2;
     public  static final  int GRID_PRODUCT_LAYOUT =3;
     private  int type;
+    private String backgroundColor;
     ////////// Banner Slider
     private List<SliderModel> sliderModelList ;
 
@@ -39,20 +40,20 @@ public class HomePageModel {
     ////////// Banner Slider
 
     ////////// strip ad
-    private int resource;
-    private String backgroundColor;
+    private String resource;
 
-    public HomePageModel(int type, int resource, String backgroundColor) {
+
+    public HomePageModel(int type, String resource, String backgroundColor) {
         this.type = type;
         this.resource = resource;
         this.backgroundColor = backgroundColor;
     }
 
-    public int getResource() {
+    public String getResource() {
         return resource;
     }
 
-    public void setResource(int resource) {
+    public void setResource(String resource) {
         this.resource = resource;
     }
 
@@ -66,13 +67,30 @@ public class HomePageModel {
     ////////// strip ad
 
     ////////// Horizontal Scroll
-    List<HorizontalScrollModel> horizontalScrollModelList;
+    private List<HorizontalScrollModel> horizontalScrollModelList;
+    private List<MyWishlistModel> ViewAllProductList;
     private String title;
-
-    public HomePageModel(int type, List<HorizontalScrollModel> horizontalScrollModelList, String title) {
+    public HomePageModel(int type, List<HorizontalScrollModel> horizontalScrollModelList, String title,String backgroundColor,List<MyWishlistModel> ViewAllProductList) {
         this.type = type;
         this.horizontalScrollModelList = horizontalScrollModelList;
         this.title = title;
+        this.backgroundColor = backgroundColor;
+        this.ViewAllProductList = ViewAllProductList;
+    }
+
+    public HomePageModel(int type, List<HorizontalScrollModel> horizontalScrollModelList, String title,String backgroundColor) {
+        this.type = type;
+        this.horizontalScrollModelList = horizontalScrollModelList;
+        this.title = title;
+        this.backgroundColor = backgroundColor;
+    }
+
+    public List<MyWishlistModel> getViewAllProductList() {
+        return ViewAllProductList;
+    }
+
+    public void setViewAllProductList(List<MyWishlistModel> viewAllProductList) {
+        ViewAllProductList = viewAllProductList;
     }
 
     public List<HorizontalScrollModel> getHorizontalScrollModelList() {

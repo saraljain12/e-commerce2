@@ -10,6 +10,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.util.List;
 
 public class GridProductLayoutAdapter extends BaseAdapter {
@@ -51,7 +54,8 @@ public class GridProductLayoutAdapter extends BaseAdapter {
             TextView productTitle = view.findViewById(R.id.h_s_product_title);
             TextView productDescription = view.findViewById(R.id.h_s_product_description);
             TextView productPrice = view.findViewById(R.id.h_s_product_price);
-            productImage.setImageResource(horizontalScrollModelList.get(position).getHorizontalScrollImage());
+           // productImage.setImageResource(horizontalScrollModelList.get(position).getHorizontalScrollImage());
+            Glide.with(view.getContext()).load(horizontalScrollModelList.get(position).getHorizontalScrollImage()).apply(new RequestOptions().placeholder(R.mipmap.house)).into(productImage);
             productTitle.setText(horizontalScrollModelList.get(position).getHorizontalScrollTitle());
             productDescription.setText(horizontalScrollModelList.get(position).getHorizontalScrollDescription());
             productPrice.setText(horizontalScrollModelList.get(position).getHorizontalScrollPrice());
