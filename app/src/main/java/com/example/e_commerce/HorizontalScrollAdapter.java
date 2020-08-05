@@ -35,10 +35,7 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
       String HorizontalScrollTitle = horizontalScrollModelList.get(position).getHorizontalScrollTitle();
         String HorizontalScrollDescription = horizontalScrollModelList.get(position).getHorizontalScrollDescription();
         String HorizontalScrollPrice = horizontalScrollModelList.get(position).getHorizontalScrollPrice();
-        holder.setHorizontalScrollImage(HorizontalScrollImage);
-        holder.setHorizontalScrollDescription(HorizontalScrollDescription);
-        holder.setHorizontalScrollTitle(HorizontalScrollTitle);
-        holder.setHorizontalScrollPrice(HorizontalScrollPrice);
+        holder.setHorizontalScrollImage(HorizontalScrollImage,HorizontalScrollDescription,HorizontalScrollTitle,HorizontalScrollPrice);
     }
 
     @Override
@@ -59,28 +56,25 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
             HorizontalScrollDescription = itemView.findViewById(R.id.h_s_product_description);
             HorizontalScrollPrice = itemView.findViewById(R.id.h_s_product_price);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent productdetailsintent = new Intent(itemView.getContext(),ProductDetailsActivity.class);
-                    itemView.getContext().startActivity(productdetailsintent);
-                }
-            });
+
 
         }
 
-        public void setHorizontalScrollImage(String horizontalScrollImage) {
+        public void setHorizontalScrollImage(String horizontalScrollImage,String horizontalScrollDescription,String horizontalScrollTitle,String horizontalScrollPrice) {
             Glide.with(itemView.getContext()).load(horizontalScrollImage).apply(new RequestOptions().placeholder(R.mipmap.house)).into(HorizontalScrollImage);
-        }
-
-        public void setHorizontalScrollDescription(String horizontalScrollDescription) {
             HorizontalScrollDescription.setText(horizontalScrollDescription);
-        }
-        public void setHorizontalScrollTitle(String horizontalScrollTitle) {
             HorizontalScrollTitle.setText(horizontalScrollTitle);
-        }
-        public void setHorizontalScrollPrice(String horizontalScrollPrice) {
+            if(!horizontalScrollTitle.equals("")) {
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent productdetailsintent = new Intent(itemView.getContext(), ProductDetailsActivity.class);
+                        itemView.getContext().startActivity(productdetailsintent);
+                    }
+                });
+            }
             HorizontalScrollPrice.setText(horizontalScrollPrice);
         }
+
     }
 }

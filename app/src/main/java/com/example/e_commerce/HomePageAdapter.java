@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
@@ -35,6 +37,7 @@ import java.util.TimerTask;
 public class HomePageAdapter extends RecyclerView.Adapter {
     private List<HomePageModel> homePageModelList;
     private  RecyclerView.RecycledViewPool recycledViewPool;
+    private int lastPosition = -1;
     public HomePageAdapter(List<HomePageModel> homePageModelList) {
         this.homePageModelList = homePageModelList;
         recycledViewPool = new RecyclerView.RecycledViewPool();
@@ -108,7 +111,11 @@ public class HomePageAdapter extends RecyclerView.Adapter {
             default:
                 return;
         }
-
+        if(position>lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.fade_in);
+            holder.itemView.setAnimation(animation);
+            lastPosition = position;
+        }
 
     }
 
@@ -288,17 +295,19 @@ public class HomePageAdapter extends RecyclerView.Adapter {
             Container.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(background)));
             HorizontalLayoutTitle.setText((title));
             if(horizontalScrollModelList.size()>8){
-                HorizontalLayoutButton.setVisibility(View.VISIBLE);
-                HorizontalLayoutButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ViewAllActivity.myWishlistModelList =  viewAllProductList ;
-                        Intent ViewAllIntent = new Intent(itemView.getContext(),ViewAllActivity.class);
-                        ViewAllIntent.putExtra("layout",0);
-                        ViewAllIntent.putExtra("title",title);
-                        itemView.getContext().startActivity(ViewAllIntent);
-                    }
-                });
+                if(!title.equals("")) {
+                    HorizontalLayoutButton.setVisibility(View.VISIBLE);
+                    HorizontalLayoutButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ViewAllActivity.myWishlistModelList = viewAllProductList;
+                            Intent ViewAllIntent = new Intent(itemView.getContext(), ViewAllActivity.class);
+                            ViewAllIntent.putExtra("layout", 0);
+                            ViewAllIntent.putExtra("title", title);
+                            itemView.getContext().startActivity(ViewAllIntent);
+                        }
+                    });
+                }
             }else{
                 HorizontalLayoutButton.setVisibility(View.INVISIBLE);
             }
@@ -338,16 +347,18 @@ public class HomePageAdapter extends RecyclerView.Adapter {
                 productPrice.setText(horizontalScrollModelList.get(i).getHorizontalScrollPrice());
 
             }
-            gridLayoutViewAllBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ViewAllActivity.horizontalScrollModelList = horizontalScrollModelList;
-                    Intent ViewAllIntent = new Intent(itemView.getContext(),ViewAllActivity.class);
-                    ViewAllIntent.putExtra("layout",1);
-                    ViewAllIntent.putExtra("title",title);
-                    itemView.getContext().startActivity(ViewAllIntent);
-                }
-            });
+            if(!title.equals("")) {
+                gridLayoutViewAllBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ViewAllActivity.horizontalScrollModelList = horizontalScrollModelList;
+                        Intent ViewAllIntent = new Intent(itemView.getContext(), ViewAllActivity.class);
+                        ViewAllIntent.putExtra("layout", 1);
+                        ViewAllIntent.putExtra("title", title);
+                        itemView.getContext().startActivity(ViewAllIntent);
+                    }
+                });
+            }
         }
     }
 

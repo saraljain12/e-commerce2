@@ -66,6 +66,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView categoryRecyclerView;
     private CategoryAdapter categoryAdapter;
     private ImageView noInternet;
+    private Button retryBtn;
     private   boolean isConnected ;
     private  List<CategoryModel> categoryModelFakeList = new ArrayList<>();
     private RecyclerView homePageRecyclerView;
@@ -95,6 +96,7 @@ public class HomeFragment extends Fragment {
         swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
         homePageRecyclerView = view.findViewById(R.id.home_page_recyclerview);
         categoryRecyclerView = view.findViewById(R.id.category_recyclerview);
+        retryBtn = view.findViewById(R.id.retry_btn);
 
          connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
          activeNetwork = connectivityManager.getActiveNetworkInfo();
@@ -155,6 +157,9 @@ public class HomeFragment extends Fragment {
                 activeNetwork.isConnected();
         if(isConnected){
             noInternet.setVisibility(View.GONE);
+            retryBtn.setVisibility(View.GONE);
+            categoryRecyclerView.setVisibility(View.VISIBLE);
+            homePageRecyclerView.setVisibility(View.VISIBLE);
             if(DBqueries.categoryModelList.size()==0){
                 DBqueries.loadCategories(categoryRecyclerView,getContext());
             }else{
@@ -184,31 +189,23 @@ public class HomeFragment extends Fragment {
             requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         }else{
             noInternet.setVisibility(View.VISIBLE);
+            retryBtn.setVisibility(View.VISIBLE);
+            categoryRecyclerView.setVisibility(View.GONE);
+            homePageRecyclerView.setVisibility(View.GONE);
         }
          ////////////////////// refresh layout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
+                reload();
 
-                DBqueries.categoryModelList.clear();
-                DBqueries.parentHashmap.clear();
-                connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                activeNetwork = connectivityManager.getActiveNetworkInfo();
-                isConnected = activeNetwork != null &&
-                        activeNetwork.isConnected();
-
-                if(isConnected){
-                    categoryRecyclerView.setAdapter(categoryAdapter);
-                    homePageRecyclerView.setAdapter(adapter);
-                    noInternet.setVisibility(View.GONE);
-                    DBqueries.loadCategories(categoryRecyclerView,getContext());
-                    DBqueries.parentHashmap.put("HOME",new ArrayList<HomePageModel>());
-                    DBqueries.loadFragmentData(homePageRecyclerView,getContext(),"HOME");
-                }else{
-                    noInternet.setVisibility(View.VISIBLE);
-                    swipeRefreshLayout.setRefreshing(false);
-                }
+            }
+        });
+        retryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reload();
             }
         });
         /////////////////////// refresh layout
@@ -223,7 +220,34 @@ public class HomeFragment extends Fragment {
         // TODO: Use the ViewModel
 
     }
+    private  void reload(){
+        DBqueries.categoryModelList.clear();
+        DBqueries.parentHashmap.clear();
+        activeNetwork = connectivityManager.getActiveNetworkInfo();
+        isConnected = activeNetwork != null &&
+                activeNetwork.isConnected();
 
+        if(isConnected){
+            noInternet.setVisibility(View.GONE);
+            categoryRecyclerView.setVisibility(View.VISIBLE);
+            homePageRecyclerView.setVisibility(View.VISIBLE);
+            retryBtn.setVisibility(View.GONE);
+            categoryAdapter = new CategoryAdapter(categoryModelFakeList);
+            adapter = new HomePageAdapter(homePageModelFakeList);
+            categoryRecyclerView.setAdapter(categoryAdapter);
+            homePageRecyclerView.setAdapter(adapter);
+            DBqueries.loadCategories(categoryRecyclerView,getContext());
+            DBqueries.parentHashmap.put("HOME",new ArrayList<HomePageModel>());
+            DBqueries.loadFragmentData(homePageRecyclerView,getContext(),"HOME");
+        }else{
+            noInternet.setVisibility(View.VISIBLE);
+            retryBtn.setVisibility(View.VISIBLE);
+            categoryRecyclerView.setVisibility(View.GONE);
+            homePageRecyclerView.setVisibility(View.GONE);
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
+    }
 
 
 }
