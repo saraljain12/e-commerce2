@@ -2,11 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/product_title"
-    android:elevation="3dp"
-    android:background="@android:color/white"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:elevation="3dp">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/product_images_viewpager"
@@ -29,13 +28,15 @@
         app:tabRippleColor="@null" />
 
     <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
+        android:id="@+id/product_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:text="Product Title"
         android:textColor="@android:color/black"
         android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewpager_indicator" />
 
@@ -85,7 +86,7 @@
         android:orientation="horizontal"
         android:padding="2dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6">
+        app:layout_constraintTop_toBottomOf="@+id/product_title">
 
         <TextView
             android:id="@+id/tv_product_rating_miniview"
@@ -148,34 +149,34 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:background="#FF3030"
+        android:gravity="right"
         android:orientation="horizontal"
         android:padding="16dp"
-        android:gravity="right"
-        android:background="#FF3030"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cutted_price">
+
         <TextView
+            android:id="@+id/tv_coupen_redemption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Check Price After coupon redemption"
-            android:textColor="@android:color/white"
             android:layout_weight="1"
+            android:text="Check Price After coupon redemption"
             android:textAlignment="center"
-            android:id="@+id/tv_coupen_redemption"
+            android:textColor="@android:color/white"
 
             />
+
         <Button
+            android:id="@+id/coupon_redemption_btn"
             android:layout_width="75dp"
             android:layout_height="30dp"
-            android:id="@+id/coupon_redemption_btn"
-            android:textColor="@android:color/white"
+            android:background="@drawable/border_background"
             android:text="redeem"
-            android:textSize="12sp"
-            android:background="@drawable/border_background"/>
-
-
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
 
 
     </LinearLayout>

@@ -45,59 +45,11 @@ public class MyRewardFragment extends Fragment {
         rewardModelList.add(new MyRewardViewModel("chutiya bnane ki scheme ","till 30 july 2020","Get 20% cashback on any amount above 2000 and get free home delivery also."));
         rewardModelList.add(new MyRewardViewModel("21 din m paise double","till 30 july 2020","Get 20% cashback on any amount above 2000 and get free home delivery also."));
 
-        MyRewardAdapter rewardAdapter = new MyRewardAdapter(rewardModelList);
+        MyRewardAdapter rewardAdapter = new MyRewardAdapter(rewardModelList,false);
         rewardsrecyclerview.setAdapter(rewardAdapter);
         rewardAdapter.notifyDataSetChanged();
         return view;
     }
 
-    public static class MyRewardAdapter extends RecyclerView.Adapter<MyRewardAdapter.ViewHolder> {
 
-        private List<MyRewardViewModel> rewardModelList;
-
-        public MyRewardAdapter(List<MyRewardViewModel> rewardModelList) {
-            this.rewardModelList = rewardModelList;
-        }
-
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-           View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rewards_item_layout,parent,false);
-           return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            String title = rewardModelList.get(position).getTitle();
-            String date = rewardModelList.get(position).getExpiryDate();
-            String body = rewardModelList.get(position).getCouponbody();
-            holder.setData(title,date,body);
-        }
-
-        @Override
-        public int getItemCount() {
-            return rewardModelList.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder{
-            private TextView coupentitle,couponexpirydate,couponbody;
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-                coupentitle = itemView.findViewById(R.id.coupon_title);
-                couponexpirydate = itemView.findViewById(R.id.coupon_validity);
-                couponbody = itemView.findViewById(R.id.coupon_body);
-
-
-
-
-            }
-            private void setData(String title, String date,String body){
-                coupentitle.setText(title);
-                couponexpirydate.setText(date);
-                couponbody.setText(body);
-            };
-        }
-
-    }
 }
