@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,10 +30,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import static com.example.e_commerce.DBqueries.cartlist;
+import static com.example.e_commerce.DBqueries.currentuser;
+
 public class  MainActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
 
     private AppBarConfiguration mAppBarConfiguration;
+
+    private TextView badge_count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,15 +110,49 @@ public class  MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-
+        invalidateOptionsMenu();
 
 
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem cartitem = menu.findItem(R.id.myCartFragment);
+
+        cartitem.setActionView(R.layout.badge_layout);
+        ImageView badge_icon = cartitem.getActionView().findViewById(R.id.badge_icon);
+        badge_icon.setImageResource(R.mipmap.cart_white);
+        badge_count = cartitem.getActionView().findViewById(R.id.badge_count);
+        if(currentuser != null){
+            if (cartlist.size() == 0) {
+                DBqueries.loadCartlist(MainActivity.this, new Dialog(MainActivity.this), false, badge_count);
+            }
+            else
+            {
+                badge_count.setVisibility(View.VISIBLE);
+                if(DBqueries.cartlist.size()<99) {
+                    badge_count.setText(String.valueOf(cartlist.size()));
+                }
+                else {badge_count.setText("99");
+                }
+            }
+        }
+        cartitem.getActionView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(MainActivity.this,R.id.nav_host_fragment).navigate(R.id.myCartFragment);
+            }
+        });
+//            .setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Fragment fragment = new Fragment();
+//                    FragmentManager fragmentManager = getSupportFragmentManager();
+//                    fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+//                }
+//            });
+
 
         return true;
     }
@@ -149,7 +189,7 @@ public class  MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-
+        invalidateOptionsMenu();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         //System.out.println(currentUser.getUid().toString());
         if(currentUser == null){

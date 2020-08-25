@@ -43,7 +43,7 @@ public class MyWishlistAdapter extends RecyclerView.Adapter<MyWishlistAdapter.Vi
         String productImage = myWishlistModelList.get(position).getProductImage();
         long freeCoupenNo = myWishlistModelList.get(position).getFreeCoupen();
         String rating = myWishlistModelList.get(position).getRating();
-        holder.setData(productImage,title,freeCoupenNo,rating,totalRating,price,cuttedPrice,COD);
+        holder.setData(productImage,title,freeCoupenNo,rating,totalRating,price,cuttedPrice,COD,position);
     }
 
     @Override
@@ -62,6 +62,7 @@ public class MyWishlistAdapter extends RecyclerView.Adapter<MyWishlistAdapter.Vi
         private TextView paymentMethod;
         private View priceCut;
         private ImageButton deleteBtn;
+        private Integer lastposition =1;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,8 +78,9 @@ public class MyWishlistAdapter extends RecyclerView.Adapter<MyWishlistAdapter.Vi
             paymentMethod = itemView.findViewById(R.id.payement_method);
             deleteBtn = itemView.findViewById(R.id.delete_btn);
         }
-        private void setData(String resource,String title,long freeCoupenNo,String rating,long total_rating,String priceText,String cuttedPriceText,boolean COD){
-            Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.mipmap.house)).into(productImage);
+        private void setData(String resource, String title, long freeCoupenNo, String rating, long total_rating, String priceText, String cuttedPriceText, boolean COD, final int index)
+        {
+            Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.drawable.user)).into(productImage);
             productTitle.setText(title);
             if(freeCoupenNo > 0){
                 freeCoupen.setVisibility(View.VISIBLE);
@@ -108,7 +110,10 @@ public class MyWishlistAdapter extends RecyclerView.Adapter<MyWishlistAdapter.Vi
                 deleteBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(itemView.getContext(), "delete", Toast.LENGTH_SHORT).show();
+                        if(!ProductDetailsActivity.running_wishlist_query ) {
+                            ProductDetailsActivity.running_wishlist_query = true;
+                            DBqueries.removeFromWishlist(index, itemView.getContext());
+                        }
                     }
                 });
             }else{

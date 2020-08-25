@@ -1,34 +1,37 @@
 package com.example.e_commerce;
 
-import android.app.ActionBar;
+import android.app.Dialog;
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.example.e_commerce.DBqueries.cartModelList;
+import static com.example.e_commerce.DBqueries.cartlist;
+import static com.example.e_commerce.DBqueries.currentuser;
 
 
 public class MyCartFragment extends Fragment {
-
-     public MyCartFragment() {
+    private Dialog loadingDialog;
+    public static CartAdapter cartAdapter;
+    private RecyclerView recyclerView;
+    public static LinearLayout cartTotal;
+    private TextView totalAmount;
+    public MyCartFragment() {
         // Required empty public constructor
     }
 
@@ -45,36 +48,76 @@ public class MyCartFragment extends Fragment {
 
     private RecyclerView cartItemsRecyclerView;
     private Button continueBtn;
+    View view = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-       
-        // Inflate the layout for this fragment
 
-        final View view = inflater.inflate(R.layout.fragment_my_cart, container, false);
+//        totalAmount = view.findViewById(R.id.total_cart_amount);
+        if(currentuser == null ){
+
+        }
+        else{
 
 
-        cartItemsRecyclerView = view.findViewById(R.id.cart_items_recyclerview);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(RecyclerView.VERTICAL);
-        cartItemsRecyclerView.setLayoutManager(layoutManager);
-        List<CartItemModel> cartItemModelList = new ArrayList<>();
-        cartItemModelList.add(new CartItemModel(0,R.mipmap.ic_launcher,"PIXEL 2",2,"Rs 49999/-","Rs 59999/-",2,2,2));
-        cartItemModelList.add(new CartItemModel(0,R.mipmap.ic_launcher,"PIXEL 2",1,"Rs 49999/-","Rs 59999/-",2,0,2));
-        cartItemModelList.add(new CartItemModel(0,R.mipmap.ic_launcher,"PIXEL 2",0,"Rs 49999/-","Rs 59999/-",2,2,0));
-        cartItemModelList.add(new CartItemModel("2","Rs 49999/-","Free","Rs 999/-","Rs 49999/-",1));
-        cartItemModelList.add(new CartItemModel("2","Rs 49999/-","Free","Rs 999/-","Rs 49999/-",1));
-        CartAdapter cartAdapter = new CartAdapter(cartItemModelList);
-        cartItemsRecyclerView.setAdapter(cartAdapter);
-        cartAdapter.notifyDataSetChanged();
-        continueBtn = view.findViewById(R.id.cart_continue_btn);
-        continueBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.addAddressActivity);
+            // Inflate the layout for this fragment
+
+            view = inflater.inflate(R.layout.fragment_my_cart, container, false);
+
+            ////// loading dialog
+            loadingDialog = new Dialog(getContext());
+            loadingDialog.setContentView(R.layout.loading_progress_dialog);
+            loadingDialog.setCancelable(false);
+            loadingDialog.getWindow().setBackgroundDrawable(getContext().getDrawable(R.drawable.slider_background));
+            loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+            loadingDialog.show();
+            //////
+
+            cartItemsRecyclerView = view.findViewById(R.id.cart_items_recyclerview);
+            cartTotal =view.findViewById(R.id.linearLayout);
+            totalAmount = view.findViewById(R.id.total_cart_amount);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            layoutManager.setOrientation(RecyclerView.VERTICAL);
+            cartItemsRecyclerView.setLayoutManager(layoutManager);
+
+            if(DBqueries.cartModelList.size() == 0){
+                DBqueries.cartlist.clear();
+                cartModelList.clear();
+                DBqueries.loadCartlist(getContext(), loadingDialog,true, new TextView(getContext()));
             }
-        });
+            else{
+
+                loadingDialog.dismiss();
+            }
+//            cartAdapter = new CartAdapter(DBqueries.cartModelList);
+//            recyclerView.setAdapter(cartAdapter);
+//            cartAdapter.notifyDataSetChanged();
+            if(cartModelList.size()==0){
+                cartTotal.setVisibility(View.GONE);
+            }else{
+                cartTotal.setVisibility(View.VISIBLE);
+            }
+
+            cartAdapter = new CartAdapter(DBqueries.cartModelList, totalAmount,true);
+            cartItemsRecyclerView.setAdapter(cartAdapter);
+            cartAdapter.notifyDataSetChanged();
+            continueBtn = view.findViewById(R.id.cart_continue_btn);
+            continueBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Navigation.findNavController(view).navigate(R.id.addAddressActivity);
+                }
+            });
+            continueBtn = view.findViewById(R.id.cart_continue_btn);
+            continueBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DBqueries.loadAddress(getContext());
+                }
+            });
+
+
 //       OnBackPressedCallback callback = new OnBackPressedCallback(true) {
 //           @Override
 //           public void handleOnBackPressed() {
@@ -82,8 +125,10 @@ public class MyCartFragment extends Fragment {
 //           }
 //        } ;
 //        requireActivity().getOnBackPressedDispatcher().addCallback(this,callback);
+        }
         return view;
     }
+
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {

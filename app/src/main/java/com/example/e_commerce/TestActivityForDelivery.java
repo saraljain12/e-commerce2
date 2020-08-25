@@ -10,7 +10,7 @@ import android.widget.Button;
 public class TestActivityForDelivery extends AppCompatActivity {
 
     public static final int MANAGE_ADDRESS=1;
-    public static final int SELECT_ADDRESS=0;
+
     private Button ChangeOrAddAddress;
     private Button ViewAllAddress;
 
@@ -25,7 +25,7 @@ public class TestActivityForDelivery extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent myaddressintent  = new Intent(TestActivityForDelivery.this,MyAdressesActivity.class);
-                myaddressintent.putExtra("MODE",SELECT_ADDRESS);
+              //  myaddressintent.putExtra("MODE",SELECT_ADDRESS);
                 startActivity(myaddressintent);
             }
         });

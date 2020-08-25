@@ -23,16 +23,22 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class VerifyPhone extends AppCompatActivity {
     Button verify;
     EditText phn;
     ProgressBar pb;
+    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     String id;
     DatabaseReference mfirebasedatabase = FirebaseDatabase.getInstance().getReference();
     final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -194,7 +200,7 @@ public class VerifyPhone extends AppCompatActivity {
                             String password = getIntent().getStringExtra("password");
                             String name = getIntent().getStringExtra("name");
                             final String mmemail = email.replaceAll("\\.",",");
-                            final Map<String,String> user = new HashMap<String,String>();
+                            final Map<String,Object> user = new HashMap<String,Object>();
 
                             user.put("name",name);
                             user.put("email",email);
@@ -213,14 +219,67 @@ public class VerifyPhone extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                   if(task.isSuccessful()){
-                                      mfirebasedatabase.child("users").child(phone).setValue(user);
-                                      mfirebasedatabase.child("emails").child(mmemail).setValue(email);
-                                      Intent intent=new Intent(getApplicationContext(), MainActivity.class);
-                                      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                      startActivity(intent);
+                                       firebaseFirestore.collection("USERS").document(fbAuth.getCurrentUser().getUid())
+                                               .set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<Void> task) {
+                                               if(task.isSuccessful()){
+                                                   CollectionReference reference = firebaseFirestore.collection("USERS").document(fbAuth.getCurrentUser().getUid())
+                                                           .collection("USER_DATA") ;
+                                                   //////// MAPS
+                                                   Map<String,Object> wishlistMap = new HashMap<>();
+                                                   wishlistMap.put("list_size",(long)0);
+
+                                                   Map<String,Object> ratingMap = new HashMap<>();
+                                                   ratingMap.put("list_size",(long)0);
+
+                                                   Map<String,Object> cartMap = new HashMap<>();
+                                                   cartMap.put("list_size",(long)0);
+                                                   Map<String,Object> myAddressMap = new HashMap<>();
+                                                   myAddressMap.put("list_size",(long)0);
+                                                   ////////// MAPS
+
+                                                   /////////// LIST
+                                                   final List<String> documentName = new ArrayList<>();
+                                                   documentName.add("MY_WISHLIST");
+                                                   documentName.add("MY_RATING");
+                                                   documentName.add("MY_CART");
+                                                   documentName.add("MY_ADDRESS");
+                                                   List<Map<String, Object>> documentFields = new ArrayList<>();
+                                                   documentFields.add(wishlistMap);
+                                                   documentFields.add(ratingMap);
+                                                   documentFields.add(cartMap);
+                                                   documentFields.add(myAddressMap);
+                                                   /////////// LIST
+                                                   for (int i=0;i<documentName.size();i++){
+                                                       final int finalI = i;
+                                                       reference.document(documentName.get(i)).set(documentFields.get(i))
+                                                               .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                   @Override
+                                                                   public void onComplete(@NonNull Task<Void> task) {
+                                                                       if(task.isSuccessful()){
+                                                                           if(finalI == documentName.size()-1){
+                                                                               mfirebasedatabase.child("users").child(phone).setValue(user);
+                                                                               mfirebasedatabase.child("emails").child(mmemail).setValue(email);
+                                                                               Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+                                                                               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                                               startActivity(intent);
+                                                                           }
+                                                                       }else{
+                                                                           Toast.makeText(VerifyPhone.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                                                                       }
+                                                                   }
+                                                               });
+                                                   }
+
+                                               }else{
+                                                   Toast.makeText(VerifyPhone.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                                               }
+                                           }
+                                       });
 
                                   }else{
-
+                                      Toast.makeText(VerifyPhone.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });

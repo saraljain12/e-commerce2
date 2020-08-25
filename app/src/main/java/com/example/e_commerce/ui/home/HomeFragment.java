@@ -43,6 +43,7 @@ import com.example.e_commerce.HorizontalScrollModel;
 import com.example.e_commerce.LoginActivity;
 import com.example.e_commerce.MainActivity;
 import com.example.e_commerce.MyWishlistModel;
+import com.example.e_commerce.ProductDetailsActivity;
 import com.example.e_commerce.R;
 import com.example.e_commerce.SliderAdapter;
 import com.example.e_commerce.SliderModel;
@@ -150,9 +151,8 @@ public class HomeFragment extends Fragment {
 
 
         adapter = new HomePageAdapter(homePageModelFakeList);
-        homePageRecyclerView.setAdapter(adapter);
-
-
+         homePageRecyclerView.setAdapter(adapter);
+         adapter.notifyDataSetChanged();
         isConnected = activeNetwork != null &&
                 activeNetwork.isConnected();
         if(isConnected){
@@ -169,15 +169,17 @@ public class HomeFragment extends Fragment {
             categoryRecyclerView.setAdapter(categoryAdapter);
 
 
-            if(DBqueries.parentHashmap.size()==0){
+            if(DBqueries.parentHashmap.size() == 0){
                 DBqueries.parentHashmap.put("HOME",new ArrayList<HomePageModel>());
                 DBqueries.loadFragmentData(homePageRecyclerView,getContext(),"HOME");
+                homePageRecyclerView.setAdapter(adapter);
+
             }else{
+
                 adapter = new HomePageAdapter(DBqueries.parentHashmap.get("HOME"));
                 adapter.notifyDataSetChanged();
             }
             homePageRecyclerView.setAdapter(adapter);
-
             OnBackPressedCallback callback = new OnBackPressedCallback(true) {
                 @Override
                 public void handleOnBackPressed() {

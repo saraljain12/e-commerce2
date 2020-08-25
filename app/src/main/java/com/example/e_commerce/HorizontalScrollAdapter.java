@@ -35,7 +35,8 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
       String HorizontalScrollTitle = horizontalScrollModelList.get(position).getHorizontalScrollTitle();
         String HorizontalScrollDescription = horizontalScrollModelList.get(position).getHorizontalScrollDescription();
         String HorizontalScrollPrice = horizontalScrollModelList.get(position).getHorizontalScrollPrice();
-        holder.setHorizontalScrollImage(HorizontalScrollImage,HorizontalScrollDescription,HorizontalScrollTitle,HorizontalScrollPrice);
+        String product_ID = horizontalScrollModelList.get(position).getProductID();
+        holder.setHorizontalScrollImage(product_ID,HorizontalScrollImage,HorizontalScrollDescription,HorizontalScrollTitle,HorizontalScrollPrice);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
 
         }
 
-        public void setHorizontalScrollImage(String horizontalScrollImage,String horizontalScrollDescription,String horizontalScrollTitle,String horizontalScrollPrice) {
+        public void setHorizontalScrollImage(final String product_ID, String horizontalScrollImage, String horizontalScrollDescription, String horizontalScrollTitle, String horizontalScrollPrice) {
             Glide.with(itemView.getContext()).load(horizontalScrollImage).apply(new RequestOptions().placeholder(R.mipmap.house)).into(HorizontalScrollImage);
             HorizontalScrollDescription.setText(horizontalScrollDescription);
             HorizontalScrollTitle.setText(horizontalScrollTitle);
@@ -69,6 +70,7 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
                     @Override
                     public void onClick(View v) {
                         Intent productdetailsintent = new Intent(itemView.getContext(), ProductDetailsActivity.class);
+                        productdetailsintent.putExtra("productID",product_ID);
                         itemView.getContext().startActivity(productdetailsintent);
                     }
                 });

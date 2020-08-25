@@ -12,19 +12,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import static com.example.e_commerce.DeliveryActivity.SELECT_ADDRESS;
 import static com.example.e_commerce.MyAdressesActivity.refreshitem;
 import static com.example.e_commerce.TestActivityForDelivery.MANAGE_ADDRESS;
-import static com.example.e_commerce.TestActivityForDelivery.SELECT_ADDRESS;
 
 public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.ViewHolder> {
 
     private int MODE;
     private List<AdressesModel> adressesModelList ;
-    private int preselectedposition = -1;
+    private int preselectedposition ;
 
     public AddressesAdapter(List<AdressesModel> adressesModelList, int Mode) {
         this.adressesModelList = adressesModelList;
         this.MODE = Mode;
+        preselectedposition = DBqueries.selectedAddress;
     }
 
     @NonNull
@@ -86,6 +87,7 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
                             adressesModelList.get(preselectedposition).setSelectedAddress(false);
                             refreshitem(preselectedposition, position);
                             preselectedposition = position;
+                            DBqueries.selectedAddress = position;
                         }
                     }
                 });

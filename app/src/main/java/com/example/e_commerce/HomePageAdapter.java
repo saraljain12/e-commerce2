@@ -16,6 +16,7 @@ import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -211,7 +212,7 @@ public class HomePageAdapter extends RecyclerView.Adapter {
                         pageLooper(arrangedList);
                 }
             });
-            startbannerSlideShow(sliderModelList);
+            startbannerSlideShow(arrangedList);
             bannerSliderViewPager.getChildAt(0).setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -242,8 +243,9 @@ public class HomePageAdapter extends RecyclerView.Adapter {
             final Runnable update = new Runnable() {
                 @Override
                 public void run() {
-                    if(currentpage>=sliderModelList.size())
+                    if(currentpage>=sliderModelList.size()) {
                         currentpage = 2;
+                    }
                     bannerSliderViewPager.setCurrentItem(currentpage++,true);
                 }
             };

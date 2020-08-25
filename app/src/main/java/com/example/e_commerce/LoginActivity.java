@@ -47,13 +47,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mFireBaseAuthSateListener);
+       // mAuth.addAuthStateListener(mFireBaseAuthSateListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mAuth.removeAuthStateListener(mFireBaseAuthSateListener);
+        //mAuth.removeAuthStateListener(mFireBaseAuthSateListener);
     }
 
     @Override
@@ -160,22 +160,22 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        mFireBaseAuthSateListener=new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
-                FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
-
-                if(user!=null)
-                {
-                    Intent intent=new Intent(getApplicationContext(), MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                    return;
-                }
-            }
-        };
+//        mFireBaseAuthSateListener=new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//
+//                FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+//
+//                if(user!=null)
+//                {
+//                    Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                    finish();
+//                    return;
+//                }
+//            }
+//        };
 
 
 
