@@ -76,19 +76,19 @@
         android:background="@color/cardview_light_background"
         android:elevation="8dp"
         android:orientation="horizontal"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
 
-        <Button
+        <TextView
             android:id="@+id/add_to_cart_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:backgroundTint="#ffffff"
-            android:focusableInTouchMode="false"
-            android:stateListAnimator="@null"
+            android:gravity="center"
             android:text="ADD TO CART"
             android:textColor="#000000"
             android:textSize="16sp"
@@ -100,7 +100,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:backgroundTint="#ff0000"
+            android:background="#ff0000"
             android:text="BUY NOW"
             android:textColor="#ffffff"
             android:textSize="16sp"

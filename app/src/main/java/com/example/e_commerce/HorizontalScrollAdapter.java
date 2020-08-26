@@ -1,5 +1,6 @@
 package com.example.e_commerce;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +70,7 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        /////////////// loading dialog
                         Intent productdetailsintent = new Intent(itemView.getContext(), ProductDetailsActivity.class);
                         productdetailsintent.putExtra("productID",product_ID);
                         itemView.getContext().startActivity(productdetailsintent);

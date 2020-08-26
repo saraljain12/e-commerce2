@@ -107,7 +107,7 @@ public class ProductSpecificationAdapter extends RecyclerView.Adapter<ProductSpe
     }
 
     private int setDp(int dp , Context context){
-return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dp,context.getResources().getDisplayMetrics());
+         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dp,context.getResources().getDisplayMetrics());
 
     }
 }
