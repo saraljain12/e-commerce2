@@ -144,16 +144,6 @@ public class  MainActivity extends AppCompatActivity {
                 Navigation.findNavController(MainActivity.this,R.id.nav_host_fragment).navigate(R.id.myCartFragment);
             }
         });
-//            .setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Fragment fragment = new Fragment();
-//                    FragmentManager fragmentManager = getSupportFragmentManager();
-//                    fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
-//                }
-//            });
-
-
         return true;
     }
 

@@ -7,6 +7,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -192,7 +193,7 @@ public class DBqueries {
         }
     }
 
-    public static void loadAddress(final Context context){
+    public static void loadAddress(final Context context, final Dialog dialog){
         firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_DATA")
                 .document("MY_ADDRESS").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -203,6 +204,7 @@ public class DBqueries {
                   if((long)task.getResult().get("list_size")==(long)0){
                       deliveryIntent = new Intent(context,AddAddressActivity.class);
                       deliveryIntent.putExtra("INTENT","deliveryIntent");
+
                   }else{
                       deliveryIntent = new Intent(context,DeliveryActivity.class);
                       for(int i=1;i<(long)task.getResult().get("list_size")+1;i++){
@@ -214,6 +216,7 @@ public class DBqueries {
                               selectedAddress = i-1 ;
                           }
                       }
+                      dialog.dismiss();
                   }
                   context.startActivity(deliveryIntent);
               }else{

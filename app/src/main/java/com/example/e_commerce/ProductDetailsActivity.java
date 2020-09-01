@@ -323,7 +323,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                                                     if(cartModelList.size() != 0){
 
-                                                        cartModelList.add(new CartItemModel(CartItemModel.CART_ITEM,productID,documentSnapshot.get("product_image_1").toString()
+                                                        cartModelList.add(0,new CartItemModel(CartItemModel.CART_ITEM,productID,documentSnapshot.get("product_image_1").toString()
                                                                 , documentSnapshot.get("product_title").toString()
                                                                 , (long) documentSnapshot.get("free_coupon")
                                                                 ,  documentSnapshot.get("product_price").toString()
@@ -637,7 +637,24 @@ public class ProductDetailsActivity extends AppCompatActivity {
         buyNowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeliveryActivity.cartItemModelList = new ArrayList<>();
+                loadingDialog.show();
+                DeliveryActivity.cartModelList = new ArrayList<>();
+                DeliveryActivity.cartModelList.add(new CartItemModel(CartItemModel.CART_ITEM,productID,documentSnapshot.get("product_image_1").toString()
+                        , documentSnapshot.get("product_title").toString()
+                        , (long) documentSnapshot.get("free_coupon")
+                        ,  documentSnapshot.get("product_price").toString()
+                        , documentSnapshot.get("cutted_price").toString()
+                        , (long)1
+                        , (long)0
+                        ,(long)0
+                        ,(boolean)documentSnapshot.get("in_stock")));
+                DeliveryActivity.cartModelList.add(new CartItemModel(CartItemModel.TOTAL_AMOUNT));
+                if(DBqueries.myAddressList.size()==0){
+                    DBqueries.loadAddress(ProductDetailsActivity.this,loadingDialog);
+                }else{
+                    loadingDialog.dismiss();
+                    Navigation.findNavController(v).navigate(R.id.addAddressActivity);
+                }
 
             }
         });

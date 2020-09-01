@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import static com.example.e_commerce.DBqueries.cartModelList;
 import static com.example.e_commerce.DBqueries.cartlist;
 import static com.example.e_commerce.DBqueries.currentuser;
@@ -80,40 +82,54 @@ public class MyCartFragment extends Fragment {
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
             layoutManager.setOrientation(RecyclerView.VERTICAL);
             cartItemsRecyclerView.setLayoutManager(layoutManager);
-
             if(DBqueries.cartModelList.size() == 0){
                 DBqueries.cartlist.clear();
                 cartModelList.clear();
                 DBqueries.loadCartlist(getContext(), loadingDialog,true, new TextView(getContext()));
             }
             else{
-
+                if(cartModelList.get(cartModelList.size()-1).getType()== CartItemModel.TOTAL_AMOUNT){
+                    LinearLayout total = (LinearLayout) totalAmount.getParent().getParent();
+                    total.setVisibility(View.VISIBLE);
+                }
                 loadingDialog.dismiss();
             }
 //            cartAdapter = new CartAdapter(DBqueries.cartModelList);
 //            recyclerView.setAdapter(cartAdapter);
 //            cartAdapter.notifyDataSetChanged();
-            if(cartModelList.size()==0){
-                cartTotal.setVisibility(View.GONE);
-            }else{
-                cartTotal.setVisibility(View.VISIBLE);
-            }
+//            if(cartModelList.size()==0){
+//                cartTotal.setVisibility(View.GONE);
+//            }else{
+//                cartTotal.setVisibility(View.VISIBLE);
+//            }
 
             cartAdapter = new CartAdapter(DBqueries.cartModelList, totalAmount,true);
             cartItemsRecyclerView.setAdapter(cartAdapter);
             cartAdapter.notifyDataSetChanged();
             continueBtn = view.findViewById(R.id.cart_continue_btn);
+
             continueBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    DeliveryActivity.cartModelList = new ArrayList<>();
+                    for(int x=0; x< DBqueries.cartModelList.size();x++){
+                        CartItemModel cartItemModel =  DBqueries.cartModelList.get(x);
+                        if(cartItemModel.isInStock()){
+                            DeliveryActivity.cartModelList.add(cartItemModel);
+                        }
+
+                    }
+                    DeliveryActivity.cartModelList.add( new CartItemModel(CartItemModel.TOTAL_AMOUNT));
+                    loadingDialog.show();
+                    DBqueries.myAddressList.clear();
+                    if(DBqueries.myAddressList.size()==0){
+                        DBqueries.loadAddress(getContext(),loadingDialog);
+                    }else{
+                        loadingDialog.dismiss();
                     Navigation.findNavController(view).navigate(R.id.addAddressActivity);
-                }
-            });
-            continueBtn = view.findViewById(R.id.cart_continue_btn);
-            continueBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DBqueries.loadAddress(getContext());
+                    }
+
                 }
             });
 
